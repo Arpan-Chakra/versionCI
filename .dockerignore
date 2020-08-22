@@ -1,0 +1,2 @@
+# Allow build/distributions
+!/build/libs/*.jar

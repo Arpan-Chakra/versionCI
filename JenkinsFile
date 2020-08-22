@@ -1,0 +1,54 @@
+pipeline {
+
+    agent any
+
+    triggers {
+        pollSCM('* * * * *') //polling for changes, here once a minute
+    }
+
+    stages {
+        stage('Checkout') {
+            steps {
+            //Checking out the public repo
+                git 'https://github.com/Arpan-Chakra/versionCI.git'
+            }
+        }
+        stage('Gradle - Build') {
+                    steps {
+                        script {
+                          sh './gradlew build'
+                        }
+                    }
+                }
+        stage('Run Unit Tests and Publish') {
+            steps {
+                script {
+                    try {
+                        sh './gradlew clean test --no-daemon' //run test
+                    } finally {
+                        junit '**/build/test-results/test/*.xml' //publish test report
+                    }
+                }
+            }
+        }
+        stage('Build Docker Image') {
+            steps {
+               script {
+                  sh './gradlew build'
+                  sh 'ls -l;ls build/libs/'
+                  sh 'docker build -t arpandockerentry/version-ci:1.0.1 .'
+               }
+            }
+        }
+        stage('Upload Docker Image') {
+            steps {
+               script {
+                  //Here reading password from a file. Can be directly configured in Jenkins using Docker plugin
+                  //Or can be improved by reading from a secret volume if we use Kube plugin for agent. Here trying to keep it simple.
+                  sh 'docker login -u arpandockerentry --password-stdin < password' //reading password from a file.
+                  sh 'docker push arpandockerentry/version-ci:1.0.1'
+               }
+            }
+        }
+    }
+}
