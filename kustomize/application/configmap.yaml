@@ -1,0 +1,10 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: version-ci-config
+  namespace: technical-test
+data:
+   config.json: |
+     {
+       "environment" : "dev"
+     }

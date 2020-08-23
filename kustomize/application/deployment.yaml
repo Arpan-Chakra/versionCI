@@ -1,0 +1,35 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: version-ci-deploy
+  namespace: technical-test
+  labels:
+    app: version-ci-app
+spec:
+  selector:
+    matchLabels:
+      app: version-ci-app
+  replicas: 2
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 0
+  template:
+    metadata:
+      labels:
+        app: version-ci-app
+    spec:
+      containers:
+      - name: version-ci
+        image: arpandockerentry/version-ci:1.0.1
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 5000
+        volumeMounts:
+        - name: config-volume
+          mountPath: /configs/
+      volumes:
+      - name: config-volume
+        configMap:
+          name: version-ci-config

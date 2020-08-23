@@ -50,5 +50,26 @@ pipeline {
                }
             }
         }
+        stage('Deploy Kubernetes Manifests') {
+                    steps {
+                       script {
+                          sh 'kubectl kustomize kustomize/application/ | kubectl apply -f -'
+                       }
+                    }
+                }
+        stage('Verify Kubernetes Resources') {
+                            steps {
+                               script {
+                                  sh 'sleep 15;kubectl get all -n technical-test'
+                               }
+                            }
+                        }
+        stage('Delete Kubernetes Stack') {
+                                    steps {
+                                       script {
+                                          sh 'kubectl delete ns technical-test'
+                                       }
+                                    }
+                                }
     }
 }
