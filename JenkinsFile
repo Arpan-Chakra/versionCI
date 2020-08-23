@@ -43,8 +43,9 @@ pipeline {
         stage('Run and Test Docker Image') {
                     steps {
                        script {
-                          sh ' docker run -d -p 8082:8082 --name versionApi  arpandockerentry/version-ci:1.0.1;docker ps;'
+                          sh ' docker run -d -p 8082:8082 --name versionApi  arpandockerentry/version-ci:1.0.1;sleep 5;docker ps  -f name=versionApi;sleep 5;'
                           sh ' curl http://localhost:8082/version'
+                          sh 'docker stop versionApi; docker rm versionApi'
                        }
                     }
                 }
