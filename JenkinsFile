@@ -40,6 +40,14 @@ pipeline {
                }
             }
         }
+        stage('Run and Test Docker Image') {
+                    steps {
+                       script {
+                          sh ' docker run -d -p 8082:8082 --name versionApi  arpandockerentry/version-ci:1.0.1;docker ps;'
+                          sh ' curl http://localhost:8082/version'
+                       }
+                    }
+                }
         stage('Upload Docker Image') {
             steps {
                script {

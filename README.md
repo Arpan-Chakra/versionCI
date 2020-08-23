@@ -7,7 +7,7 @@ Go to Root Path
 2. java -jar build/libs/version-api-0.0.1-SNAPSHOT.jar
 
 #Test output manually
-Hit the following URL : http://localhost:8080/version
+Hit the following URL : http://localhost:8082/version
 Once done we can shutdown the process.
 
 #Create CI pipeline
