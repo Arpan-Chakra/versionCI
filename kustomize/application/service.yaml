@@ -6,7 +6,6 @@ metadata:
   labels:
     app: version-ci-app
 spec:
-  type: LoadBalancer
   selector:
     app: version-ci-app
   ports:
